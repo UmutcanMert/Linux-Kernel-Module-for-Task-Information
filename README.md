@@ -133,4 +133,27 @@ $ ls /proc/mytaskinfo
 
 [/proc/procf] olusturdugumuz dosya acildiginda ve kapandiginda sistem defualtlarindan farkli olarak ne yapilacagini belirleyebiliriz. Bunun icin yukaridaki proc_ops data structure’inda tanimli pointerlara uygun olarak; bizde asagidaki fonksiyon tanimlamalarini kullanacagiz.
 
+```
+int my_open(struct inode *inode, struct file *file)
+{
+printk(KERN_INFO "my_ropen() for /proc/%s \n", PROCF_NAME);
+return 0;
+}
+int my_release(struct inode *inode, struct file *file)
+{
+printk(KERN_INFO "my_release() for /proc/%s \n", PROCF_NAME);
+return 0;
+}
+```
 
+Yukarida yazdigimiz module’de eger asagidaki degisikligi yaparsak
+```
+const struct proc_ops my_ops = {
+.proc_read = NULL,
+.proc_write = NULL,
+.proc_open = my_open,
+.proc_release = my_release,
+/*bunlari kullanarak dosya davranislarini belirleyebilirsiniz*/
+};
+
+```
