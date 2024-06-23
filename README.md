@@ -1,36 +1,19 @@
 /proc file system, process ve kernella alakalı farklı istatistiklere ulaşılabileceğiniz bir arayüz
-olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada /proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela
-
-
+olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada /proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela;
 ```
 cat /proc/stat
 ```
->cpu 2255 34 2290 22625563 6290 127 456 0 0 0 <br>
-cpu0 1132 34 1441 11311718 3675 127 438 0 0 0 <br>
-cpu1 1123 0 849 11313845 2614 0 18 0 0 0 <br>
-intr 114930548 113199788 3 0 5 263 0 4 [... lots more numbers ...] <br>
-ctxt 1990473 <br>
-btime 1062191376 <br>
-processes 2915 <br>
-procs_running 1 <br>
-procs_blocked 0 <br>
-softirq 183433 0 21755 12 39 1137 231 21459 2263 
-
 ```
 ls /proc/irq/
 ```
->0 10 12 14 16 18 2 4 6 8 prof_cpu_mask <br>
-1 11 13 15 17 19 3 5 7 9 default_smp_affinity <br>
-
 ```
 ls /proc/irq/0/
 ```
->smp_affinity <br>
 ------------------------
 
-<h3>Linux Kernel Modülle /proc file systeme dosya eklemek</h3> 
+<h3>1.Linux Kernel Modülle /proc file systeme dosya eklemek</h3> 
 
-<h4>3.1 Genel Ozet</h4>
+<h4>1.1 Genel Ozet</h4>
 
 Kernel tarafında struct file_operations ve kernel 5.6dan sonra eklenen proc_ops şeklinde data structurelar tanımlanmıştır. Bu data structureların temel özellikleri okuma ve yazma yapılırken çağrılacak fonksiyonları içermesidir.
 
@@ -72,7 +55,7 @@ oluşturduktan sonra fileoperations tipindeki mydevice.ops.read vb üyelerine il
 ve device_create ile device file oluşturulur (yada terminalden mknod kullanabilirsiniz.).
 
 <hr>
-<H4>3.2.module ile procfs’e file ekleme/çıkarma</H4>
+<H4>1.2.module ile procfs’e file ekleme/çıkarma</H4>
 
 Daha önceki ödevde modul başlarken ve biterken hangi fonksiyonların çalıştırılabileceklerini
 **module_init()** ve **module_exit()** ile yapmıştık.
@@ -129,7 +112,7 @@ $ ls /proc/mytaskinfo
 /proc/mytaskinfo
 ```
 <hr>
-<h4>3.3 Olusturdugumuz file’in open ve closeda yapacaklarini belirleme</h4>
+<h4>1.3 Olusturdugumuz file’in open ve closeda yapacaklarini belirleme</h4>
 
 [/proc/procf] olusturdugumuz dosya acildiginda ve kapandiginda sistem defualtlarindan farkli olarak ne yapilacagini belirleyebiliriz. Bunun icin yukaridaki proc_ops data structure’inda tanimli pointerlara uygun olarak; bizde asagidaki fonksiyon tanimlamalarini kullanacagiz.
 
@@ -182,7 +165,7 @@ return 0;
 Bu programi calistirdiktan sonra bash **$sudo dmesg** ile loga bakarak printk ile yukarida belirlemis olduğumuz mesajlarin yazildigini teyit edebilirsiniz.
 
 
-<h4>3.4 Oluşturduğumuz file’dan read ve write yapma</h4>
+<h4>1.4 Oluşturduğumuz file’dan read ve write yapma</h4>
 
 Dikkat ettiyseniz yukarıda .proc_read = NULL, .proc_write = NULL, şeklinde başlatıldı. Buraya atadığımız değerler /proc/my_taskinfo dan read/write yapıldığında çağrılıyor. proc_read ve write aşağıdaki şekilde tanımlanmış:
 
@@ -201,7 +184,7 @@ ssize_t my_read(struct file *file, char __user *usr_buf, size_t size, loff_t *of
 ```
 Yukaridaki fonksiyona baktigimiz zaman parametrelerinde bulunan >- file: kullanilan dosyayi(daha sonra bunu kullanarak datasini vs belirleyecegiz) >- usr_buf: kullanici tarafi bufferi >- size: bu bufferin size’ini >- *offset: en son kernel tarafindan kac karakter okundugu (bu bir nevi file cursor oluyor, bu degerin guncellenmesi my_read icerisinde yapilacak. Baslangicta deger 0)
 
-<h4>3.5 Kernel space’den User Space’e data kopyalama</h4>
+<h4>1.5 Kernel space’den User Space’e data kopyalama</h4>
 
 [/proc/mytaskinfo] uzerinden okuma islemini hem terminal üzerinden hemde herhangi bir dille
 yazılan user programı ile yapabiliriz. Her nasıl olursa olsun sonuçta yazdığımız modul kernel’ın
@@ -371,9 +354,9 @@ return size;
 }
 ```
 <hr>
-<h3>4 Yapılması İstenenler</h3>
+<h3>2.Yapılması İstenenler</h3>
 
-<h4>4.1.</h4>
+<h4>2.1.</h4>
 
 /proc file systemde mytaskinfo isminde bir dosya oluşturarak daha önce verilen process state
 grubunu kullanarak, verilen durumdaki processleri ve bunların çalışma zamanlarını listeleyen bir
