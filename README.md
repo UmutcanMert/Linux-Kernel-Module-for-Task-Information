@@ -17,7 +17,7 @@ ls /proc/irq/0/
 
 Kernel tarafında struct file_operations ve kernel 5.6dan sonra eklenen proc_ops şeklinde data structurelar tanımlanmıştır. Bu data structureların temel özellikleri okuma ve yazma yapılırken çağrılacak fonksiyonları içermesidir.
 
-'struct proc_ops {
+```struct proc_ops {
 
 unsigned int proc_flags;
 
@@ -43,7 +43,7 @@ long (*proc_ioctl)(struct file *, unsigned int, unsigned long);
 
 long (*proc_compat_ioctl)(struct file *, unsigned int, unsigned long);
 
-#endif'
+#endif```
 
 Temelde yapacağımız, bu data structure'ın **proc_open**, **proc_realese**, **proc_read**, **proc_write**
 pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilacak islemlerin davranislarini belirleyecek) aşağıdaki foksiyonla /proc file systemda dosya oluşturacağız:
