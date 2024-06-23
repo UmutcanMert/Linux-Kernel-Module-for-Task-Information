@@ -62,7 +62,7 @@ long (*proc_compat_ioctl)(struct file *, unsigned int, unsigned long);
 
 #endif'
 
-Temelde yapacağımız, bu data structure'ın *proc_open*, **proc_realese**, **proc_read**, **proc_write**
+Temelde yapacağımız, bu data structure'ın **proc_open**, **proc_realese**, **proc_read**, **proc_write**
 pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilacak islemlerin davranislarini belirleyecek) aşağıdaki foksiyonla /proc file systemda dosya oluşturacağız:
 
 ```struct proc_dir_entry *proc_create(const char *name, umode_t mode, struct proc_dir_entry *parent, const struct proc_ops *proc_ops);```
