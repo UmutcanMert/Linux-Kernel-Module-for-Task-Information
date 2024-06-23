@@ -8,15 +8,19 @@ GRUP:
 <hr>
 /proc file system, process ve kernella alakalı farklı istatistiklere ulaşılabileceğiniz bir arayüz
 olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada /proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela;
+
 ```
 cat /proc/stat
 ```
+
 ```
 ls /proc/irq/
 ```
+
 ```
 ls /proc/irq/0/
 ```
+
 ------------------------
 
 <h3>1.Linux Kernel Modülle /proc file systeme dosya eklemek</h3> 
