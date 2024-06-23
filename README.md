@@ -71,8 +71,8 @@ pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilaca
 oluşturduktan sonra fileoperations tipindeki mydevice.ops.read vb üyelerine ilgili atamalar yapılır
 ve device_create ile device file oluşturulur (yada terminalden mknod kullanabilirsiniz.).
 
-
-<H4>module ile procfs’e file ekleme/çıkarma</H4>
+<hr>
+<H4>3.2.module ile procfs’e file ekleme/çıkarma</H4>
 
 Daha önceki ödevde modul başlarken ve biterken hangi fonksiyonların çalıştırılabileceklerini
 **module_init()** ve **module_exit()** ile yapmıştık.
@@ -120,3 +120,17 @@ MODULE_DESCRIPTION("My Task Info Module");
 MODULE_AUTHOR("kendi isminiz");
 
 ```
+
+Bu adımdan sonra sudo insmod ile modülü yüklediğinizde /proc fs de kendi oluşturduğunuz dosyayı
+görebilmeniz gerekiyor.
+
+```
+$ ls /proc/mytaskinfo
+/proc/mytaskinfo
+```
+<hr>
+<h4>3.3 Olusturdugumuz file’in open ve closeda yapacaklarini belirleme</h4>
+
+[/proc/procf] olusturdugumuz dosya acildiginda ve kapandiginda sistem defualtlarindan farkli olarak ne yapilacagini belirleyebiliriz. Bunun icin yukaridaki proc_ops data structure’inda tanimli pointerlara uygun olarak; bizde asagidaki fonksiyon tanimlamalarini kullanacagiz.
+
+
