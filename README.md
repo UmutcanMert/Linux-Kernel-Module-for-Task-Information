@@ -354,13 +354,13 @@ return size;
 }
 ```
 <hr>
-<h3>2.Yapılması İstenenler</h3>
+<h3>2.Yapılanlar</h3>
 
 <h4>2.1.</h4>
 
 /proc file systemde mytaskinfo isminde bir dosya oluşturarak daha önce verilen process state
 grubunu kullanarak, verilen durumdaki processleri ve bunların çalışma zamanlarını listeleyen bir
-module oluşturmanız istenmektedir. Process state grupları aşağıdaki şekilde belirlenmiştir:
+module oluşturulmaya çalışıldı. Process state grupları aşağıdaki şekilde belirlenmiştir:
 
 >"R (running)", /* 0x00 */ <br>
 "S (sleeping)", /* 0x01 */ <br>
@@ -372,9 +372,11 @@ module oluşturmanız istenmektedir. Process state grupları aşağıdaki şekil
 "P (parked)", /* 0x40 */ <br>
 "I (idle)", /* 0x80 */ <br>
 
-Çalışırken sadece baştaki karakteri kullanacağız: Mesela
+Çalışırken sadece baştaki karakter kullanıldı: Mesela
 ```
 $ echo "R" > /proc/mytaskinfo
+```
+```
 $ cat /proc/mytaskinfo
 process running times
 1.pid = ... state = ... utime = ..., stime = ..., utime+stime = ..., vruntime = ...
@@ -388,7 +390,9 @@ for_each_process(task) {
 /* on each iteration task points to the next task */
 }
 ```
+<h4>2.2.</h4>
+Bu programi test eden bir tane user_test.c yazildi. user_test.c dosyayi bir defa actiktan sonra, her
+gruptan processi liste halinde yazdırır.
 
-
-
+<h3>Outputlar</h3>
 
