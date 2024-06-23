@@ -3,7 +3,7 @@ olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistikl
 
 
 ```
-cat /proc/stat <br>
+cat /proc/stat
 ```
 >cpu 2255 34 2290 22625563 6290 127 456 0 0 0 <br>
 cpu0 1132 34 1441 11311718 3675 127 438 0 0 0 <br>
@@ -17,13 +17,13 @@ procs_blocked 0 <br>
 softirq 183433 0 21755 12 39 1137 231 21459 2263 
 
 ```
-ls /proc/irq/ <br>
+ls /proc/irq/
 ```
 >0 10 12 14 16 18 2 4 6 8 prof_cpu_mask <br>
 1 11 13 15 17 19 3 5 7 9 default_smp_affinity <br>
 
 ```
-ls /proc/irq/0/ <br>
+ls /proc/irq/0/
 ```
 >smp_affinity <br>
 ------------------------
