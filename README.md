@@ -1,5 +1,5 @@
 ## Linux-Kernel-Module-for-Task-Information   
-GRUP:
+Grup üyeleri:
 <br>
 <a href="https://github.com/UmutcanMert">Umutcan Mert</a> <br>
 <a href="https://github.com/Nihat-AYDIN">Nihat Aydın</a> <br>
