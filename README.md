@@ -180,3 +180,22 @@ return 0;
 }
 ```
 Bu programi calistirdiktan sonra bash **$sudo dmesg** ile loga bakarak printk ile yukarida belirlemis olduğumuz mesajlarin yazildigini teyit edebilirsiniz.
+
+
+<h4>3.4 Oluşturduğumuz file’dan read ve write yapma</h4>
+
+Dikkat ettiyseniz yukarıda .proc_read = NULL, .proc_write = NULL, şeklinde başlatıldı. Buraya atadığımız değerler /proc/my_taskinfo dan read/write yapıldığında çağrılıyor. proc_read ve write aşağıdaki şekilde tanımlanmış:
+
+>ssize_t (*proc_read)(struct file *, char __user *, size_t, loff_t *);
+>ssize_t (*proc_write)(struct file *, const
+>char __user *, size_t, loff_t *);
+
+Bunun için proc_read ve proc_write pointerlarının tiplerine uygun olarak iki fonksiyon tanımlamamız gerekiyor.
+```
+ssize_t my_read(struct file *file, char __user *usr_buf, size_t size, loff_t *offset)
+{
+
+}
+```
+Yukaridaki fonksiyona baktigimiz zaman parametrelerinde bulunan >- file: kullanilan dosyayi(daha sonra bunu kullanarak datasini vs belirleyecegiz) >- usr_buf: kullanici tarafi bufferi >- size: bu bufferin size’ini >- *offset: en son kernel tarafindan kac karakter okundugu (bu bir nevi file cursor oluyor, bu degerin guncellenmesi my_read icerisinde yapilacak. Baslangicta deger 0)
+
