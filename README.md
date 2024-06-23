@@ -399,21 +399,19 @@ gruptan processi liste halinde yazdırır.
 <table>
   <tr>
     <td>
-      <img src="is-sis-1.png" alt="" widht=45%>
+      <img src="is-sis-1.png" alt=""  width="45%">
     </td>
-    
     <td>
-      <img src="is-sis-2.png" alt="" widht=45%>
+      <img src="is-sis-2.png" alt=""  width="45%">
     </td>
   </tr>
   
   <tr>
     <td>
-      <img src="is-sis-3.png" alt=""widht=45%>
+      <img src="is-sis-3.png" alt=""  width="45%">
     </td>
-    
     <td>
-      <img src="is-sis-4.png" alt=""widht=45%>
+      <img src="is-sis-4.png" alt=""  width="45%">
     </td>
   </tr>
 </table>
