@@ -72,11 +72,7 @@ ve device_create ile device file oluşturulur (yada terminalden mknod kullanabil
 
 <hr>
 <H4>1.2.module ile procfs’e file ekleme/çıkarma</H4>
-
-Daha önceki ödevde modul başlarken ve biterken hangi fonksiyonların çalıştırılabileceklerini
-**module_init()** ve **module_exit()** ile yapmıştık.
-
-Burada proc file systemda dosya oluşturma kısmını module_init()’e; bu dosyayı kaldırma kısmınıda module_exit()e argüman olarak vereceğiz. Bunun için öncelikli olarak my_module_init()
+proc file systemda dosya oluşturma kısmını module_init()’e; bu dosyayı kaldırma kısmınıda module_exit()e argüman olarak vereceğiz. Bunun için öncelikli olarak my_module_init()
 ve my_module_exit() şeklinde iki tane fonksiyon tanımlayalım. Bunlarda temel olarak dosya oluşturup kaldıracağız (/include/linux/proc_fs.h):
 
 ```
@@ -120,7 +116,7 @@ MODULE_AUTHOR("kendi isminiz");
 
 ```
 
-Bu adımdan sonra sudo insmod ile modülü yüklediğinizde /proc fs de kendi oluşturduğunuz dosyayı
+Bu adımdan sonra **sudo insmod** ile modülü yüklediğinizde /proc fs de kendi oluşturduğunuz dosyayı
 görebilmeniz gerekiyor.
 
 ```
@@ -130,7 +126,7 @@ $ ls /proc/mytaskinfo
 <hr>
 <h4>1.3 Olusturdugumuz file’in open ve closeda yapacaklarini belirleme</h4>
 
-[/proc/procf] olusturdugumuz dosya acildiginda ve kapandiginda sistem defualtlarindan farkli olarak ne yapilacagini belirleyebiliriz. Bunun icin yukaridaki proc_ops data structure’inda tanimli pointerlara uygun olarak; bizde asagidaki fonksiyon tanimlamalarini kullanacagiz.
+[/proc/procf] olusturduğumuz dosya acildiginda ve kapandiginda sistem defualtlarindan farkli olarak ne yapilacagini belirleyebiliriz. Bunun icin yukaridaki proc_ops data structure’inda tanimli pointerlara uygun olarak; bizde asagidaki fonksiyon tanimlamalarini kullanacagiz.
 
 ```
 int my_open(struct inode *inode, struct file *file)
