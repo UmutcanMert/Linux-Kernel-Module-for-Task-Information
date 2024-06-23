@@ -396,3 +396,24 @@ gruptan processi liste halinde yazdırır.
 
 <h3>Outputlar</h3>
 
+<table>
+  <tr>
+    <td>
+      <img src="is-sis-1.png" alt="">
+    </td>
+    
+    <td>
+      <img src="is-sis-2.png" alt="">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <img src="is-sis-3.png" alt="">
+    </td>
+    
+    <td>
+      <img src="is-sis-4.png" alt="">
+    </td>
+  </tr>
+</table>
