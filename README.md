@@ -61,3 +61,12 @@ long (*proc_ioctl)(struct file *, unsigned int, unsigned long);
 long (*proc_compat_ioctl)(struct file *, unsigned int, unsigned long);
 
 #endif'
+
+Temelde yapacağımız, bu data structure'ın *proc_open*, **proc_realese**, **proc_read**, **proc_write**
+pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilacak islemlerin davranislarini belirleyecek) aşağıdaki foksiyonla /proc file systemda dosya oluşturacağız:
+
+```struct proc_dir_entry *proc_create(const char *name, umode_t mode, struct proc_dir_entry *parent, const struct proc_ops *proc_ops);```
+
+> device deriver yazarken farklı olarak /dev altında struct cdev mydevice... ile device file
+oluşturduktan sonra fileoperations tipindeki mydevice.ops.read vb üyelerine ilgili atamalar yapılır
+ve device_create ile device file oluşturulur (yada terminalden mknod kullanabilirsiniz.).
