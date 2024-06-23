@@ -1,3 +1,11 @@
+## Linux-Kernel-Module-for-Task-Information   
+GRUP:
+<br>
+<a href="https://github.com/UmutcanMert">Umutcan Mert</a> <br>
+<a href="https://github.com/Nihat-AYDIN">Nihat Aydın</a> <br>
+<a href="https://github.com/hamza37yavuz">Muhammet Hamza Yavuz</a> <br>
+<a href="https://github.com/s192275">Serhat Kılıç</a>
+<hr>
 /proc file system, process ve kernella alakalı farklı istatistiklere ulaşılabileceğiniz bir arayüz
 olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada /proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela;
 ```
