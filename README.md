@@ -370,4 +370,42 @@ kfree(buf);
 return size;
 }
 ```
+<hr>
+<h3>4 Yapılması İstenenler</h3>
+
+<h4>4.1.</h4>
+
+/proc file systemde mytaskinfo isminde bir dosya oluşturarak daha önce verilen process state
+grubunu kullanarak, verilen durumdaki processleri ve bunların çalışma zamanlarını listeleyen bir
+module oluşturmanız istenmektedir. Process state grupları aşağıdaki şekilde belirlenmiştir:
+
+>"R (running)", /* 0x00 */ <br>
+"S (sleeping)", /* 0x01 */ <br>
+"D (disk sleep)", /* 0x02 */ <br>
+"T (stopped)", /* 0x04 */ <br>
+"t (tracing stop)", /* 0x08 */ <br>
+"X (dead)", /* 0x10 */ <br>
+"Z (zombie)", /* 0x20 */ <br>
+"P (parked)", /* 0x40 */ <br>
+"I (idle)", /* 0x80 */ <br>
+
+Çalışırken sadece baştaki karakteri kullanacağız: Mesela
+```
+$ echo "R" > /proc/mytaskinfo
+$ cat /proc/mytaskinfo
+process running times
+1.pid = ... state = ... utime = ..., stime = ..., utime+stime = ..., vruntime = ...
+2.pid = ... state = ... utime = ..., stime = ..., utime+stime = ..., vruntime = ...
+```
+Linux kernelde, for_each_process() macro kullanarak sistemdeki mevcut taskler üzerinde iterasyon
+oluşturabilirsiniz:
+```
+struct task_struct *task;
+for_each_process(task) {
+/* on each iteration task points to the next task */
+}
+```
+
+
+
 
