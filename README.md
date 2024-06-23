@@ -157,3 +157,26 @@ const struct proc_ops my_ops = {
 };
 
 ```
+
+bir tane user_test.c programi yazalim:
+
+```
+/** user_test.c
+*
+*/
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main()
+{
+int fd = open("/proc/mytaskinfo", O_RDWR);
+if (fd == -1)
+{
+printf("Couldn't open file\n");
+return -1;
+}
+close(fd);
+return 0;
+}
+```
+Bu programi calistirdiktan sonra bash **$sudo dmesg** ile loga bakarak printk ile yukarida belirlemis olduğumuz mesajlarin yazildigini teyit edebilirsiniz.
