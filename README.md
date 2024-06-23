@@ -308,4 +308,66 @@ return 0;
 islemler yaptik. Bu durumu ortadan kaldirmak icin, my_openda dosya datasi atayarak bu
 dataya my_readde vs tekrardan erisebiliriz.
 • Oncelikle bir tane data structure tanimlayalim:
+```
+struct my_data
+{
+int size;
+char *buf; /* my data starts here */
+};
+```
+• Sonra my_open() da sprintfle daha once my_read icerisinde yapmis oldugumuz kismi,
+my_open’a alalim:
+```
+static int my_open(struct inode *inode, struct file *file)
+{
+struct my_data *my_data = kmalloc(sizeof(struct my_data) * MYBUF_SIZE, GFP_KERNEL);
+my_data->buf = kmalloc(sizeof(char) * MYBUF_SIZE, GFP_KERNEL);
+my_data->size = MYBUF_SIZE;
+my_data->size = sprintf(my_data->buf, "Hello World\n");
+/* validate access to data */
+file->private_data = my_data;
+return 0;
+}
+```
+
+Yukaridaki kodda kmalloc, malloc’a benzer olarak kernel space calismaktadir. struct file
+pointer kullanilarak dosyamizin datasini vs belirleyebiliyoruz. Yani my_read()’de okuma islemini **file->private_data** uzerinden yapacagiz.
+
+```
+static ssize_t my_read(struct file *file, char __user *usr_buf, size_t size, loff_t *offset)
+{
+struct my_data *my_data = (struct my_data *)file->private_data;
+int len = min((int)(my_data->size - *offset), (int)size);
+if (len <= 0)
+return 0; /*end of file*/
+if (copy_to_user(usr_buf, my_data->buf + *offset, len))
+return -EFAULT;
+
+*offset = *offset + len;
+return len; /*the number of bytes copied*/
+}
+```
+<hr>
+
+<h4>3.6 Write(User spaceden kernel space’e kopyalama)</h4>
+
+my_read()’e benzer olarak my_write()’ida asagidaki sekilde tanimlayabiliriz:
+
+```
+ssize_t my_write(struct file *file, const char __user *usr_buf, size_t size, loff_t *offset)
+{
+char *buf = kmalloc(size + 1, GFP_KERNEL);
+/* copies user space usr_buf to kernel buffer */
+if (copy_from_user(buf, usr_buf, size))
+{
+printk(KERN_INFO "Error copying from user\n");
+return -EFAULT;
+}
+/* *offset += size;/*yine offseti bazi durumlarda set etmeniz vs gerekebilir, user tekrar yazdiginda fd+offsete yazar*/
+buf[size] = '\0';
+printk(KERN_INFO "the value of kernel buf: %s", buf);
+kfree(buf);
+return size;
+}
+```
 
