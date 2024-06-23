@@ -201,3 +201,111 @@ ssize_t my_read(struct file *file, char __user *usr_buf, size_t size, loff_t *of
 ```
 Yukaridaki fonksiyona baktigimiz zaman parametrelerinde bulunan >- file: kullanilan dosyayi(daha sonra bunu kullanarak datasini vs belirleyecegiz) >- usr_buf: kullanici tarafi bufferi >- size: bu bufferin size’ini >- *offset: en son kernel tarafindan kac karakter okundugu (bu bir nevi file cursor oluyor, bu degerin guncellenmesi my_read icerisinde yapilacak. Baslangicta deger 0)
 
+<h4>3.5 Kernel space’den User Space’e data kopyalama</h4>
+
+[/proc/mytaskinfo] uzerinden okuma islemini hem terminal üzerinden hemde herhangi bir dille
+yazılan user programı ile yapabiliriz. Her nasıl olursa olsun sonuçta yazdığımız modul kernel’ın
+bir parçası olduğu için kernel space’den user space’e (yada aksi yönde) kopyalama yapmamız gerekiyor. Bunun için system call yazarken kullanmış olduğumuz aşağıdaki fonksiyonları kul-
+lanacağız(linux/uaccess.h):
+
+``` 
+unsigned long copy_to_user (void __user *to,
+const void *from,
+unsigned long n);
+unsigned long copy_from_user (void *to,
+const void __user *from,
+unsigned long n);
+```
+Okurken strncpy_from_user da kullanabilirsiniz.
+<hr>
+
+/proc/file dan read yapma
+```
+#define MYBUF_SIZE 256
+static ssize_t my_read(struct file *file, char __user *usr_buf, size_t size, loff_t *offset)
+{
+char buf[MYBUF_SIZE] = {'\0'};
+int len = sprintf(buf, "Hello World\n");
+/* copy len byte to userspace usr_buf
+Returns number of bytes that could not be copied.
+On success, this will be zero.
+*/
+if(copy_to_user(usr_buf, buf, len)) return -EFAULT;
+return len; /*the number of bytes copied*/
+}
+```
+Tipik olarak oluşturduğumuz dosyadan okuma yapmak için örnek olarak:
+```
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main()
+{
+int fd = open("/proc/mytaskinfo", O_RDWR);
+if (fd == -1)
+{
+printf("Couldn't open file\n");
+return -1;
+}
+char buf[256];
+int r = read(fd, &buf, 256);
+printf("return value: %d\n buf: %.256s\n", r, buf);
+close(fd);
+return 0;
+}
+```
+
+Yukarıdaki örnekte hem user programı buffer size’i yeterli büyüklükte olduğu için, kopyalama işlemi
+tek seferde bitti. Bazen bu durum öyle olmayabilir ve user programı normal bir dosyadan belirli
+büyüklüklerde birden fazla cagri ile okuma yapmak isteyebilir.
+1. Bu durumda *offset degerini her seferinde set ederek, sonraki cagrilarda kaldigimiz yerden
+okumaya devam etmeliyiz (yani buf+ *offset degerinden).
+```
+if (copy_to_user(usr_buf, buf + *offset, len))
+return -EFAULT;
+*offset = *offset + len; /*offset(cursor position) degeri guncellendi*/
+```
+2. Yine kullanicinin vermis oldugu size ile data size’ni karsilastirilip buffer overflow yapmamak
+icin kontrol etmeliyiz
+```
+int len = min(len - *offset, size);
+if (len <= 0)
+return 0; /*end of file*/
+```
+
+Yukaridaki degisiklikleri yaptiktan sonra, make ve insmod ile modulunuzu tekrar yukleyerek mesela
+user_test2.c ile test ediniz:
+```
+/** user_test2.c
+*
+*/
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main()
+{
+int fd = open("/proc/my_taskinfo", O_RDWR);
+if (fd == -1)
+{
+printf("Couldn't open file\n");
+return -1;
+}
+char buf;
+int r;
+
+/* On success, read returns the number of bytes read
+(zero indicates end of file)*/
+while ((r = read(fd, &buf, 1)) > 0)
+{
+printf("return value: %d\n buf: %c\n", r, buf);
+}
+close(fd);
+return 0;
+}
+```
+
+3. Dikkat ederseniz her cagrida datayi sprintf ile buffera alma sonra size’ini bulma gibi gereksiz
+islemler yaptik. Bu durumu ortadan kaldirmak icin, my_openda dosya datasi atayarak bu
+dataya my_readde vs tekrardan erisebiliriz.
+• Oncelikle bir tane data structure tanimlayalim:
+
