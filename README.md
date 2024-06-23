@@ -1,7 +1,5 @@
 /proc file system, process ve kernella alakalı farklı istatistiklere ulaşılabileceğiniz bir arayüz
-olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada
-
-/proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela
+olarak işlev görmektedir. Her bir /proc/pid ile pid idli processin istatistiklerine yada /proc/kerneldatastructure ile kerneldatastructure kısmına isim vererek ilgili bilgilerine erişebilirsiniz. mesela
 
 > cat /proc/stat <br>
 cpu 2255 34 2290 22625563 6290 127 456 0 0 0 <br>
@@ -22,32 +20,36 @@ softirq 183433 0 21755 12 39 1137 231 21459 2263
 > ls /proc/irq/0/ <br>
 smp_affinity <br>
 
-3 Linux Kernel Modülle /proc file systeme dosya eklemek
-3.1 Genel Ozet
-Kernel tarafında struct file_operations ve kernel 5.6dan sonra eklenen proc_ops şeklinde data
-structurelar tanımlanmıştır. Bu data structureların temel özellikleri okuma ve yazma yapılırken
-çağrılacak fonksiyonları içermesidir.
-struct proc_ops {
+<h3>Linux Kernel Modülle /proc file systeme dosya eklemek</h3> 
+
+<h4>3.1 Genel Ozet</h4>
+
+Kernel tarafında struct file_operations ve kernel 5.6dan sonra eklenen proc_ops şeklinde data structurelar tanımlanmıştır. Bu data structureların temel özellikleri okuma ve yazma yapılırken çağrılacak fonksiyonları içermesidir.
+
+'struct proc_ops {
+
 unsigned int proc_flags;
+
 int (*proc_open)(struct inode *, struct file *);
+
 ssize_t (*proc_read)(struct file *, char __user *, size_t, loff_t *);
+
 ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
+
 ssize_t (*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+
 /* mandatory unless nonseekable_open() or equivalent is used */
+
 loff_t (*proc_lseek)(struct file *, loff_t, int);
+
 int (*proc_release)(struct inode *, struct file *);
+
 __poll_t (*proc_poll)(struct file *, struct poll_table_struct *);
+
 long (*proc_ioctl)(struct file *, unsigned int, unsigned long);
+
 #ifdef CONFIG_COMPAT
+
 long (*proc_compat_ioctl)(struct file *, unsigned int, unsigned long);
-#endif
 
-2
-
-int (*proc_mmap)(struct file *, struct vm_area_struct *);
-unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
-} __randomize_layout;
-Temelde yapacağımız, bu data structureınproc_open, proc_realese, proc_read, proc_write
-
-pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilacak islemlerin davranis-
-larini belirleyecek) aşağıdaki foksiyonla /proc file systemda dosya oluşturacağız:
+#endif'
