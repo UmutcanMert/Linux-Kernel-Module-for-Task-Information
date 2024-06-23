@@ -70,3 +70,53 @@ pointerlarına gerekli atamaları yaptıktan sonra(bunlar file uzerinde yapilaca
 > device deriver yazarken farklı olarak /dev altında struct cdev mydevice... ile device file
 oluşturduktan sonra fileoperations tipindeki mydevice.ops.read vb üyelerine ilgili atamalar yapılır
 ve device_create ile device file oluşturulur (yada terminalden mknod kullanabilirsiniz.).
+
+
+<H4>module ile procfs’e file ekleme/çıkarma</H4>
+
+Daha önceki ödevde modul başlarken ve biterken hangi fonksiyonların çalıştırılabileceklerini
+**module_init()** ve **module_exit()** ile yapmıştık.
+
+Burada proc file systemda dosya oluşturma kısmını module_init()’e; bu dosyayı kaldırma kısmınıda module_exit()e argüman olarak vereceğiz. Bunun için öncelikli olarak my_module_init()
+ve my_module_exit() şeklinde iki tane fonksiyon tanımlayalım. Bunlarda temel olarak dosya oluşturup kaldıracağız (/include/linux/proc_fs.h):
+
+```
+/* my_module.c */
+#include <linux/init.h> /* Needed for the macros */
+#include <linux/kernel.h> /* Needed for pr_info() */
+#include <linux/module.h> /* Needed by all modules */
+#include <linux/proc_fs.h> /*proc_ops, proc)create, proc_remove, remove_proc_entry...*/
+#define PROCF_NAME "mytaskinfo"
+const struct proc_ops my_ops = {
+.proc_read = NULL,
+.proc_write = NULL,
+.proc_open = NULL,
+.proc_release = NULL,
+/*bunlari kullanarak dosya davranislarini belirleyebilirsiniz*/
+};
+
+/* This function is called when the module is loaded. */
+static int __init my_module_init(void)
+{
+/* creates the [/proc/procf] entry*/
+proc_create(PROCF_NAME, 0666, NULL, &my_ops);
+printk(KERN_INFO "/proc/%s created\n", PROCF_NAME);
+return 0;
+}
+
+/* This function is called when the module is removed. */
+static void __exit my_module_exit(void)
+{
+/* removes the [/proc/procf] entry*/
+remove_proc_entry(PROCF_NAME, NULL);
+printk(KERN_INFO "/proc/%s removed\n", PROCF_NAME);
+}
+/* Macros for registering module entry and exit points.
+*/
+module_init(my_module_init);
+module_exit(my_module_exit);
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("My Task Info Module");
+MODULE_AUTHOR("kendi isminiz");
+
+```
