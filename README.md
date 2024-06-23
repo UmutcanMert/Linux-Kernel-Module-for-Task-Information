@@ -187,7 +187,9 @@ Bu programi calistirdiktan sonra bash **$sudo dmesg** ile loga bakarak printk il
 Dikkat ettiyseniz yukarıda .proc_read = NULL, .proc_write = NULL, şeklinde başlatıldı. Buraya atadığımız değerler /proc/my_taskinfo dan read/write yapıldığında çağrılıyor. proc_read ve write aşağıdaki şekilde tanımlanmış:
 
 >ssize_t (*proc_read)(struct file *, char __user *, size_t, loff_t *);
+
 >ssize_t (*proc_write)(struct file *, const
+
 >char __user *, size_t, loff_t *);
 
 Bunun için proc_read ve proc_write pointerlarının tiplerine uygun olarak iki fonksiyon tanımlamamız gerekiyor.
